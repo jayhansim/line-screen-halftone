@@ -1,3 +1,4 @@
+#extension GL_OES_standard_derivatives : enable
 precision highp float;
 
 uniform sampler2D u_image;
@@ -17,69 +18,42 @@ void main() {
   vec2 canvasAspect = vec2(u_resolution.x / u_resolution.y, 1.0);
   vec2 imageAspect  = vec2(u_imageSize.x / u_imageSize.y, 1.0);
 
+  // Scale UVs so the image fills the canvas (cover)
   vec2 scale = canvasAspect / imageAspect;
   float s = max(scale.x, scale.y);
   vec2 uv = (v_uv - 0.5) * scale / s + 0.5;
 
-  // Background outside image bounds
+  // Clamp to image bounds — background outside image
   if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
     gl_FragColor = vec4(u_background, 1.0);
     return;
   }
 
-  // Pixel-space coordinates
-  vec2 pixelCoord = v_uv * u_resolution;
+  // Sample image
+  vec3 color = texture2D(u_image, uv).rgb;
 
-  // Line direction vectors
-  float cosA = cos(u_angle);
-  float sinA = sin(u_angle);
-  vec2 perpDir = vec2(cosA, sinA);    // perpendicular to lines
-  vec2 paraDir = vec2(-sinA, cosA);   // parallel to lines
+  // Luminance (perceptual weights)
+  float lum = dot(color, vec3(0.299, 0.587, 0.114));
 
-  // Project pixel onto the perpendicular axis → determines which line cell
-  float perpProj = dot(pixelCoord, perpDir);
-
-  // Which cell are we in, and where within it?
-  float cellIndex = floor(perpProj / u_frequency);
-  float cellFrac  = fract(perpProj / u_frequency); // 0..1 within cell
-
-  // Sample image at the CENTER of this line cell (perpendicular quantized)
-  // This ensures every pixel across a line's width gets the same brightness
-  float cellCenter = (cellIndex + 0.5) * u_frequency;
-  float perpOffset = cellCenter - perpProj;
-  vec2 baseSampleUV = uv + perpDir * (perpOffset / u_resolution);
-
-  // ── Smooth luminance along the line direction ──
-  // Average multiple samples along the parallel axis to eliminate
-  // rapid brightness changes (JPEG noise, fine detail) and create
-  // smooth, continuous line width transitions
-  float lumSum = 0.0;
-  float spread = u_frequency * 3.0; // blur radius in pixels (large for smooth transitions)
-  vec3 lumWeights = vec3(0.299, 0.587, 0.114);
-
-  // 9-tap Gaussian-weighted box blur along line direction
-  lumSum += dot(texture2D(u_image, clamp(baseSampleUV + paraDir * (-4.0 * spread / 4.0 / u_resolution), 0.0, 1.0)).rgb, lumWeights) * 0.05;
-  lumSum += dot(texture2D(u_image, clamp(baseSampleUV + paraDir * (-3.0 * spread / 4.0 / u_resolution), 0.0, 1.0)).rgb, lumWeights) * 0.09;
-  lumSum += dot(texture2D(u_image, clamp(baseSampleUV + paraDir * (-2.0 * spread / 4.0 / u_resolution), 0.0, 1.0)).rgb, lumWeights) * 0.12;
-  lumSum += dot(texture2D(u_image, clamp(baseSampleUV + paraDir * (-1.0 * spread / 4.0 / u_resolution), 0.0, 1.0)).rgb, lumWeights) * 0.15;
-  lumSum += dot(texture2D(u_image, clamp(baseSampleUV, 0.0, 1.0)).rgb, lumWeights) * 0.18;
-  lumSum += dot(texture2D(u_image, clamp(baseSampleUV + paraDir * ( 1.0 * spread / 4.0 / u_resolution), 0.0, 1.0)).rgb, lumWeights) * 0.15;
-  lumSum += dot(texture2D(u_image, clamp(baseSampleUV + paraDir * ( 2.0 * spread / 4.0 / u_resolution), 0.0, 1.0)).rgb, lumWeights) * 0.12;
-  lumSum += dot(texture2D(u_image, clamp(baseSampleUV + paraDir * ( 3.0 * spread / 4.0 / u_resolution), 0.0, 1.0)).rgb, lumWeights) * 0.09;
-  lumSum += dot(texture2D(u_image, clamp(baseSampleUV + paraDir * ( 4.0 * spread / 4.0 / u_resolution), 0.0, 1.0)).rgb, lumWeights) * 0.05;
-  float lum = lumSum;
-
-  // Brightness + contrast
+  // Brightness + contrast adjustment
   lum = clamp((lum + u_brightness - 0.5) * u_contrast + 0.5, 0.0, 1.0);
 
-  // Kill very low luminance values to eliminate noise dots
-  lum = lum * step(0.08, lum);
+  // Rotate pixel position by angle
+  float cosA = cos(u_angle);
+  float sinA = sin(u_angle);
 
-  // ── Centered rectangle: sharp line in the middle of each cell ──
-  float dist = abs(cellFrac - 0.5);  // 0 at center, 0.5 at edge
-  float halfWidth = lum * 0.5;
-  float line = step(dist, halfWidth);
+  // Use pixel-space coordinates for stable line density
+  vec2 pixelCoord = v_uv * u_resolution;
+  float proj = pixelCoord.x * cosA + pixelCoord.y * sinA;
 
-  vec3 result = mix(u_background, u_foreground, line);
+  // Repeating line pattern [0..1) within each line cell
+  float linePos = fract(proj / u_frequency);
+
+  // Anti-aliased edge using derivatives
+  float edgeWidth = fwidth(linePos) * 1.0;
+  float line = smoothstep(lum - edgeWidth, lum + edgeWidth, linePos);
+
+  // Mix foreground (line) and background
+  vec3 result = mix(u_foreground, u_background, line);
   gl_FragColor = vec4(result, 1.0);
 }
