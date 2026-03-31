@@ -47,6 +47,7 @@ function loadFile(file: File): void {
     img.onload = () => {
       currentImage = img
       renderer.loadImage(img)
+      canvas.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`
       placeholder.style.display = 'none'
       canvas.style.display = 'block'
       downloadBtn.disabled = false
@@ -107,6 +108,7 @@ function loadFromUrl(url: string): void {
   img.onload = () => {
     currentImage = img
     renderer.loadImage(img)
+    canvas.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`
     placeholder.style.display = 'none'
     canvas.style.display = 'block'
     downloadBtn.disabled = false
