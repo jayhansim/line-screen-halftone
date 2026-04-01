@@ -232,10 +232,12 @@ gl.uniform1f(this.uInvert,     params.invert ? 1.0 : 0.0)
 
   exportFromImage(sourceImg: HTMLImageElement, params: HalftoneParams): void {
     const [imgW, imgH] = this.imageSize
+    const exportW = this.canvas.width
+    const exportH = this.canvas.height
 
     const offscreen = document.createElement('canvas')
-    offscreen.width  = imgW
-    offscreen.height = imgH
+    offscreen.width  = exportW
+    offscreen.height = exportH
 
     const offGL = offscreen.getContext('webgl', { preserveDrawingBuffer: true })
     if (!offGL) return
@@ -275,23 +277,19 @@ gl.uniform1f(this.uInvert,     params.invert ? 1.0 : 0.0)
     offGL.texParameteri(offGL.TEXTURE_2D, offGL.TEXTURE_MIN_FILTER, offGL.LINEAR)
     offGL.texParameteri(offGL.TEXTURE_2D, offGL.TEXTURE_MAG_FILTER, offGL.LINEAR)
 
-    // Uniforms — scale frequency proportionally to match preview density
     const getU = (name: string) => offGL.getUniformLocation(prog, name)!
-    offGL.viewport(0, 0, imgW, imgH)
+    offGL.viewport(0, 0, exportW, exportH)
     offGL.uniform1i(getU('u_image'), 0)
 
-    // Scale frequency: keep same visual line count as preview
-    const previewH = this.canvas.height
-    const freqScale = imgH / previewH
-    offGL.uniform1f(getU('u_frequency'),  params.frequency * freqScale)
-offGL.uniform1f(getU('u_contrast'),   params.contrast)
+    offGL.uniform1f(getU('u_frequency'),  params.frequency)
+    offGL.uniform1f(getU('u_contrast'),   params.contrast)
     offGL.uniform1f(getU('u_brightness'), params.brightness)
-offGL.uniform1f(getU('u_invert'),     params.invert ? 1.0 : 0.0)
+    offGL.uniform1f(getU('u_invert'),     params.invert ? 1.0 : 0.0)
     offGL.uniform3fv(getU('u_foreground'), params.foreground)
     offGL.uniform3fv(getU('u_background'), params.background)
-    offGL.uniform2f(getU('u_resolution'), imgW, imgH)
+    offGL.uniform2f(getU('u_resolution'), exportW, exportH)
     offGL.uniform2f(getU('u_imageSize'),  imgW, imgH)
-    offGL.uniform1f(getU('u_fw_scale'),   freqScale)
+    offGL.uniform1f(getU('u_fw_scale'),   1.0)
 
     offGL.clearColor(0, 0, 0, 1)
     offGL.clear(offGL.COLOR_BUFFER_BIT)
