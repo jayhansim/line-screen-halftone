@@ -33,6 +33,22 @@ function scheduleRender(): void {
   })
 }
 
+// ── Canvas sizing ────────────────────────────────────────────────────────────
+
+function fitCanvas(img: HTMLImageElement): void {
+  const container = canvas.parentElement as HTMLElement
+  const ar = img.naturalWidth / img.naturalHeight
+  const containerAr = container.clientWidth / container.clientHeight
+  canvas.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`
+  if (ar >= containerAr) {
+    canvas.style.width  = '100%'
+    canvas.style.height = 'auto'
+  } else {
+    canvas.style.height = '100%'
+    canvas.style.width  = 'auto'
+  }
+}
+
 // ── Image loading ────────────────────────────────────────────────────────────
 
 function loadFile(file: File): void {
@@ -47,9 +63,9 @@ function loadFile(file: File): void {
     img.onload = () => {
       currentImage = img
       renderer.loadImage(img)
-      canvas.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`
       placeholder.style.display = 'none'
       canvas.style.display = 'block'
+      fitCanvas(img)
       downloadBtn.disabled = false
       scheduleRender()
     }
@@ -108,9 +124,9 @@ function loadFromUrl(url: string): void {
   img.onload = () => {
     currentImage = img
     renderer.loadImage(img)
-    canvas.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`
     placeholder.style.display = 'none'
     canvas.style.display = 'block'
+    fitCanvas(img)
     downloadBtn.disabled = false
     scheduleRender()
   }
