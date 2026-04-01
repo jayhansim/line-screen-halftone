@@ -3,11 +3,9 @@ import fragSrc from './shader.frag.glsl'
 
 export interface HalftoneParams {
   frequency: number
-  angle: number       // degrees
-  contrast: number
+contrast: number
   brightness: number
-  margin: number      // horizontal gap fraction (0–1)
-  invert: boolean
+invert: boolean
   foreground: [number, number, number]  // 0–1 RGB
   background: [number, number, number]
 }
@@ -21,11 +19,9 @@ export class HalftoneRenderer {
   // Uniform locations
   private uImage: WebGLUniformLocation
   private uFrequency: WebGLUniformLocation
-  private uAngle: WebGLUniformLocation
-  private uContrast: WebGLUniformLocation
+private uContrast: WebGLUniformLocation
   private uBrightness: WebGLUniformLocation
-  private uMargin: WebGLUniformLocation
-  private uInvert: WebGLUniformLocation
+private uInvert: WebGLUniformLocation
   private uForeground: WebGLUniformLocation
   private uBackground: WebGLUniformLocation
   private uResolution: WebGLUniformLocation
@@ -45,11 +41,9 @@ export class HalftoneRenderer {
 
     this.uImage      = this.getUniform('u_image')
     this.uFrequency  = this.getUniform('u_frequency')
-    this.uAngle      = this.getUniform('u_angle')
-    this.uContrast   = this.getUniform('u_contrast')
+this.uContrast   = this.getUniform('u_contrast')
     this.uBrightness = this.getUniform('u_brightness')
-    this.uMargin     = this.getUniform('u_margin')
-    this.uInvert     = this.getUniform('u_invert')
+this.uInvert     = this.getUniform('u_invert')
     this.uForeground = this.getUniform('u_foreground')
     this.uBackground = this.getUniform('u_background')
     this.uResolution = this.getUniform('u_resolution')
@@ -168,11 +162,9 @@ export class HalftoneRenderer {
     gl.uniform1i(this.uImage, 0)
 
     gl.uniform1f(this.uFrequency,  params.frequency)
-    gl.uniform1f(this.uAngle,      params.angle * Math.PI / 180)
-    gl.uniform1f(this.uContrast,   params.contrast)
+gl.uniform1f(this.uContrast,   params.contrast)
     gl.uniform1f(this.uBrightness, params.brightness)
-    gl.uniform1f(this.uMargin,     params.margin)
-    gl.uniform1f(this.uInvert,     params.invert ? 1.0 : 0.0)
+gl.uniform1f(this.uInvert,     params.invert ? 1.0 : 0.0)
     gl.uniform3fv(this.uForeground, params.foreground)
     gl.uniform3fv(this.uBackground, params.background)
     gl.uniform2f(this.uResolution, gl.drawingBufferWidth, gl.drawingBufferHeight)
@@ -292,11 +284,9 @@ export class HalftoneRenderer {
     const previewH = this.canvas.height
     const freqScale = imgH / previewH
     offGL.uniform1f(getU('u_frequency'),  params.frequency * freqScale)
-    offGL.uniform1f(getU('u_angle'),      params.angle * Math.PI / 180)
-    offGL.uniform1f(getU('u_contrast'),   params.contrast)
+offGL.uniform1f(getU('u_contrast'),   params.contrast)
     offGL.uniform1f(getU('u_brightness'), params.brightness)
-    offGL.uniform1f(getU('u_margin'),     params.margin)
-    offGL.uniform1f(getU('u_invert'),     params.invert ? 1.0 : 0.0)
+offGL.uniform1f(getU('u_invert'),     params.invert ? 1.0 : 0.0)
     offGL.uniform3fv(getU('u_foreground'), params.foreground)
     offGL.uniform3fv(getU('u_background'), params.background)
     offGL.uniform2f(getU('u_resolution'), imgW, imgH)

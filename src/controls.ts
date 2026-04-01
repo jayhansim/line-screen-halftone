@@ -19,9 +19,7 @@ export function getParams(): HalftoneParams {
     frequency:  parseFloat((document.getElementById('frequency')  as HTMLInputElement).value),
     contrast:   parseFloat((document.getElementById('contrast')   as HTMLInputElement).value),
     brightness: parseFloat((document.getElementById('brightness') as HTMLInputElement).value),
-    angle:      parseFloat((document.getElementById('angle')      as HTMLInputElement).value),
-    margin:     parseFloat((document.getElementById('margin')     as HTMLInputElement).value),
-    invert:     (document.getElementById('invert') as HTMLInputElement).checked,
+invert:     (document.getElementById('invert') as HTMLInputElement).checked,
     foreground: hexToRgb(fgColor),
     background: hexToRgb(bgColor),
   }
@@ -30,10 +28,8 @@ export function getParams(): HalftoneParams {
 export function setupControls(onChange: () => void): void {
   const sliders = [
     { id: 'frequency',  valId: 'frequencyVal',  format: (v: number) => String(v) },
-    { id: 'margin',     valId: 'marginVal',     format: (v: number) => `${Math.round(v * 100)}%` },
-    { id: 'contrast',   valId: 'contrastVal',   format: (v: number) => v.toFixed(2) },
+{ id: 'contrast',   valId: 'contrastVal',   format: (v: number) => v.toFixed(2) },
     { id: 'brightness', valId: 'brightnessVal', format: (v: number) => v.toFixed(2) },
-    { id: 'angle',      valId: 'angleVal',       format: (v: number) => `${v}°` },
   ]
 
   for (const { id, valId, format } of sliders) {

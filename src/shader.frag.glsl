@@ -3,10 +3,8 @@ precision highp float;
 
 uniform sampler2D u_image;
 uniform float u_frequency;   // cell size in pixels
-uniform float u_angle;       // rotation in radians
 uniform float u_contrast;
 uniform float u_brightness;
-uniform float u_margin;      // horizontal gap between bars (fraction of cell, 0–1)
 uniform float u_invert;     // 0.0 = dark→wide bar, 1.0 = light→wide bar
 uniform vec3 u_foreground;
 uniform vec3 u_background;
@@ -26,25 +24,14 @@ vec2 imageUV(vec2 screenUV) {
 
 void main() {
   vec2 pixelCoord = v_uv * u_resolution;
-  float cosA = cos(u_angle);
-  float sinA = sin(u_angle);
-  vec2 center = u_resolution * 0.5;
-
-  // Rotate pixel coord into grid space
-  vec2 p = pixelCoord - center;
-  vec2 rotated = vec2(p.x * cosA - p.y * sinA,
-                      p.x * sinA + p.y * cosA) + center;
 
   // 2D grid cell
-  vec2 cellCoord = rotated / u_frequency;
+  vec2 cellCoord = pixelCoord / u_frequency;
   vec2 cellIndex = floor(cellCoord);
   vec2 localPos  = fract(cellCoord);  // [0,1] within cell
 
-  // Cell center: unrotate back to screen UV then to image UV
-  vec2 cellCenterRot = (cellIndex + 0.5) * u_frequency;
-  vec2 cp = cellCenterRot - center;
-  vec2 cellCenterScreen = vec2(cp.x * cosA + cp.y * sinA,
-                               -cp.x * sinA + cp.y * cosA) + center;
+  // Cell center UV for image sampling
+  vec2 cellCenterScreen = (cellIndex + 0.5) * u_frequency;
   vec2 imgUV = imageUV(cellCenterScreen / u_resolution);
 
   if (imgUV.x < 0.0 || imgUV.x > 1.0 ||
@@ -64,9 +51,7 @@ void main() {
 
   // Rectangle bounds in local cell space [0,1]
   // X: centered, extends barWidth/2 left and right of center
-  // Y: leave u_margin/2 gap on each side
-  float halfBarX    = barWidth * 0.5;
-  float halfMarginY = u_margin * 0.5;
+  float halfBarX = barWidth * 0.5;
 
   vec2 fw = fwidth(localPos) * u_fw_scale;
 
@@ -75,9 +60,7 @@ void main() {
     smoothstep(0.5 - halfBarX - fw.x, 0.5 - halfBarX + fw.x, localPos.x) *
     (1.0 - smoothstep(0.5 + halfBarX - fw.x, 0.5 + halfBarX + fw.x, localPos.x));
 
-  float inY = u_margin < 0.001 ? 1.0 :
-    smoothstep(halfMarginY - fw.y, halfMarginY + fw.y, localPos.y) *
-    (1.0 - smoothstep(1.0 - halfMarginY - fw.y, 1.0 - halfMarginY + fw.y, localPos.y));
+  float inY = 1.0;
 
   gl_FragColor = vec4(mix(u_background, u_foreground, inX * inY), 1.0);
 }
