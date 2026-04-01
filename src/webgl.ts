@@ -30,6 +30,7 @@ export class HalftoneRenderer {
   private uBackground: WebGLUniformLocation
   private uResolution: WebGLUniformLocation
   private uImageSize: WebGLUniformLocation
+  private uFwScale: WebGLUniformLocation
 
   constructor(private canvas: HTMLCanvasElement) {
     const gl = canvas.getContext('webgl', { preserveDrawingBuffer: true })
@@ -53,6 +54,7 @@ export class HalftoneRenderer {
     this.uBackground = this.getUniform('u_background')
     this.uResolution = this.getUniform('u_resolution')
     this.uImageSize  = this.getUniform('u_imageSize')
+    this.uFwScale    = this.getUniform('u_fw_scale')
   }
 
   // ── Shader compilation ──────────────────────────────────────────────────────
@@ -175,6 +177,7 @@ export class HalftoneRenderer {
     gl.uniform3fv(this.uBackground, params.background)
     gl.uniform2f(this.uResolution, gl.drawingBufferWidth, gl.drawingBufferHeight)
     gl.uniform2f(this.uImageSize,  this.imageSize[0], this.imageSize[1])
+    gl.uniform1f(this.uFwScale,    1.0)
 
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
   }
@@ -298,6 +301,7 @@ export class HalftoneRenderer {
     offGL.uniform3fv(getU('u_background'), params.background)
     offGL.uniform2f(getU('u_resolution'), imgW, imgH)
     offGL.uniform2f(getU('u_imageSize'),  imgW, imgH)
+    offGL.uniform1f(getU('u_fw_scale'),   freqScale)
 
     offGL.clearColor(0, 0, 0, 1)
     offGL.clear(offGL.COLOR_BUFFER_BIT)

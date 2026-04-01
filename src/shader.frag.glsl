@@ -12,6 +12,7 @@ uniform vec3 u_foreground;
 uniform vec3 u_background;
 uniform vec2 u_resolution;
 uniform vec2 u_imageSize;
+uniform float u_fw_scale;   // 1.0 for preview, freqScale for export (matches visual AA width)
 
 varying vec2 v_uv;
 
@@ -67,7 +68,7 @@ void main() {
   float halfBarX    = barWidth * 0.5;
   float halfMarginY = u_margin * 0.5;
 
-  vec2 fw = fwidth(localPos);
+  vec2 fw = fwidth(localPos) * u_fw_scale;
 
   float inX = barWidth < 0.001 ? 0.0 :
     barWidth > 0.999 ? 1.0 :
