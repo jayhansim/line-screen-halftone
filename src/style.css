@@ -178,8 +178,28 @@ input[type="text"]:focus {
 }
 
 .placeholder {
-  color: #444;
-  font-size: 15px;
+  border: 1px dashed #444;
+  border-radius: 6px;
+  padding: 24px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.placeholder p {
+  color: #888;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.placeholder span {
+  color: #ccc;
+  text-decoration: underline;
+}
+
+.placeholder:hover,
+.placeholder.drag-over {
+  border-color: #888;
+  background: #222;
 }
 
 #canvas {
