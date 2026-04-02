@@ -77,6 +77,7 @@ function loadFile(file: File): void {
 // ── File input ───────────────────────────────────────────────────────────────
 
 uploadArea.addEventListener('click', () => fileInput.click())
+placeholder.addEventListener('click', () => fileInput.click())
 
 fileInput.addEventListener('change', () => {
   if (fileInput.files?.[0]) loadFile(fileInput.files[0])
@@ -84,21 +85,24 @@ fileInput.addEventListener('change', () => {
 
 // ── Drag and drop ────────────────────────────────────────────────────────────
 
-uploadArea.addEventListener('dragover', (e) => {
-  e.preventDefault()
-  uploadArea.classList.add('drag-over')
-})
+function setupDragDrop(el: HTMLElement): void {
+  el.addEventListener('dragover', (e) => {
+    e.preventDefault()
+    el.classList.add('drag-over')
+  })
+  el.addEventListener('dragleave', () => {
+    el.classList.remove('drag-over')
+  })
+  el.addEventListener('drop', (e) => {
+    e.preventDefault()
+    el.classList.remove('drag-over')
+    const file = (e as DragEvent).dataTransfer?.files[0]
+    if (file) loadFile(file)
+  })
+}
 
-uploadArea.addEventListener('dragleave', () => {
-  uploadArea.classList.remove('drag-over')
-})
-
-uploadArea.addEventListener('drop', (e) => {
-  e.preventDefault()
-  uploadArea.classList.remove('drag-over')
-  const file = e.dataTransfer?.files[0]
-  if (file) loadFile(file)
-})
+setupDragDrop(uploadArea)
+setupDragDrop(placeholder)
 
 // ── Controls ─────────────────────────────────────────────────────────────────
 
