@@ -143,8 +143,9 @@ this.uInvert     = this.getUniform('u_invert')
 
     const gl = this.gl
     const dpr = window.devicePixelRatio || 1
-    const w = this.canvas.clientWidth  * dpr
-    const h = this.canvas.clientHeight * dpr
+    const rect = this.canvas.getBoundingClientRect()
+    const w = Math.round(rect.width  * dpr)
+    const h = Math.round(rect.height * dpr)
 
     if (this.canvas.width !== w || this.canvas.height !== h) {
       this.canvas.width  = w

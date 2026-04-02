@@ -106,7 +106,10 @@ setupControls(scheduleRender)
 
 // ── Resize ───────────────────────────────────────────────────────────────────
 
-const resizeObserver = new ResizeObserver(() => scheduleRender())
+const resizeObserver = new ResizeObserver(() => {
+  if (currentImage) fitCanvas(currentImage)
+  scheduleRender()
+})
 resizeObserver.observe(canvas.parentElement!)
 
 // ── Download ─────────────────────────────────────────────────────────────────
