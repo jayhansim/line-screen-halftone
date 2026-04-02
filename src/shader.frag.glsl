@@ -34,11 +34,7 @@ void main() {
   vec2 cellCenterScreen = (cellIndex + 0.5) * u_frequency;
   vec2 imgUV = imageUV(cellCenterScreen / u_resolution);
 
-  if (imgUV.x < 0.0 || imgUV.x > 1.0 ||
-      imgUV.y < 0.0 || imgUV.y > 1.0) {
-    gl_FragColor = vec4(u_background, 1.0);
-    return;
-  }
+  imgUV = clamp(imgUV, 0.0, 1.0);
 
   // Sample luminance once per cell — all pixels in the cell share this value,
   // which eliminates per-pixel noise from image texture detail
