@@ -171,7 +171,7 @@ export class HalftoneRenderer {
     gl.bindTexture(gl.TEXTURE_2D, this.texture)
     gl.uniform1i(this.uImage, 0)
 
-    gl.uniform1f(this.uFrequency,  params.frequency)
+    gl.uniform1f(this.uFrequency,  gl.drawingBufferWidth / params.frequency)
     gl.uniform1f(this.uContrast,   params.contrast)
     gl.uniform1f(this.uExposure,   params.exposure)
     gl.uniform1f(this.uHighlights, params.highlights)
