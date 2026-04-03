@@ -16,8 +16,11 @@ Upload an image and it's rendered in real-time as parallel lines whose thickness
 | **Background Color** | Color between the lines |
 | **Line Size** | Line density (fewer lines = bolder effect) |
 | **Contrast** | Amplifies tonal differences in the source image |
-| **Brightness** | Offsets overall luminance before halftoning |
-| **Angle** | Rotates the line direction (0° = vertical) |
+| **Exposure** | Offsets overall luminance before halftoning |
+| **Highlights** | Pulls down bright areas to recover highlight detail |
+| **Shadows** | Lifts dark areas to open up shadow detail |
+| **Blur** | Pre-blurs the image to smooth out noise before halftoning |
+| **Invert** | Swaps foreground and background tones |
 
 Download the result as a full-resolution PNG matching the original image dimensions.
 
