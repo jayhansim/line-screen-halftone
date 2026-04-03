@@ -2,10 +2,13 @@ import vertSrc from './shader.vert.glsl'
 import fragSrc from './shader.frag.glsl'
 
 export interface HalftoneParams {
-  frequency: number
-contrast: number
-  brightness: number
-invert: boolean
+  frequency:  number
+  contrast:   number
+  exposure:   number
+  highlights: number
+  shadows:    number
+  blur:       number
+  invert:     boolean
   foreground: [number, number, number]  // 0–1 RGB
   background: [number, number, number]
 }
@@ -18,10 +21,13 @@ export class HalftoneRenderer {
 
   // Uniform locations
   private uImage: WebGLUniformLocation
-  private uFrequency: WebGLUniformLocation
-private uContrast: WebGLUniformLocation
-  private uBrightness: WebGLUniformLocation
-private uInvert: WebGLUniformLocation
+  private uFrequency:  WebGLUniformLocation
+  private uContrast:   WebGLUniformLocation
+  private uExposure:   WebGLUniformLocation
+  private uHighlights: WebGLUniformLocation
+  private uShadows:    WebGLUniformLocation
+  private uBlur:       WebGLUniformLocation
+  private uInvert:     WebGLUniformLocation
   private uForeground: WebGLUniformLocation
   private uBackground: WebGLUniformLocation
   private uResolution: WebGLUniformLocation
@@ -41,9 +47,12 @@ private uInvert: WebGLUniformLocation
 
     this.uImage      = this.getUniform('u_image')
     this.uFrequency  = this.getUniform('u_frequency')
-this.uContrast   = this.getUniform('u_contrast')
-    this.uBrightness = this.getUniform('u_brightness')
-this.uInvert     = this.getUniform('u_invert')
+    this.uContrast   = this.getUniform('u_contrast')
+    this.uExposure   = this.getUniform('u_exposure')
+    this.uHighlights = this.getUniform('u_highlights')
+    this.uShadows    = this.getUniform('u_shadows')
+    this.uBlur       = this.getUniform('u_blur')
+    this.uInvert     = this.getUniform('u_invert')
     this.uForeground = this.getUniform('u_foreground')
     this.uBackground = this.getUniform('u_background')
     this.uResolution = this.getUniform('u_resolution')
@@ -163,9 +172,12 @@ this.uInvert     = this.getUniform('u_invert')
     gl.uniform1i(this.uImage, 0)
 
     gl.uniform1f(this.uFrequency,  params.frequency)
-gl.uniform1f(this.uContrast,   params.contrast)
-    gl.uniform1f(this.uBrightness, params.brightness)
-gl.uniform1f(this.uInvert,     params.invert ? 1.0 : 0.0)
+    gl.uniform1f(this.uContrast,   params.contrast)
+    gl.uniform1f(this.uExposure,   params.exposure)
+    gl.uniform1f(this.uHighlights, params.highlights)
+    gl.uniform1f(this.uShadows,    params.shadows)
+    gl.uniform1f(this.uBlur,       params.blur)
+    gl.uniform1f(this.uInvert,     params.invert ? 1.0 : 0.0)
     gl.uniform3fv(this.uForeground, params.foreground)
     gl.uniform3fv(this.uBackground, params.background)
     gl.uniform2f(this.uResolution, gl.drawingBufferWidth, gl.drawingBufferHeight)
@@ -284,7 +296,10 @@ gl.uniform1f(this.uInvert,     params.invert ? 1.0 : 0.0)
 
     offGL.uniform1f(getU('u_frequency'),  params.frequency)
     offGL.uniform1f(getU('u_contrast'),   params.contrast)
-    offGL.uniform1f(getU('u_brightness'), params.brightness)
+    offGL.uniform1f(getU('u_exposure'),   params.exposure)
+    offGL.uniform1f(getU('u_highlights'), params.highlights)
+    offGL.uniform1f(getU('u_shadows'),    params.shadows)
+    offGL.uniform1f(getU('u_blur'),       params.blur)
     offGL.uniform1f(getU('u_invert'),     params.invert ? 1.0 : 0.0)
     offGL.uniform3fv(getU('u_foreground'), params.foreground)
     offGL.uniform3fv(getU('u_background'), params.background)

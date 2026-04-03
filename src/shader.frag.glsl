@@ -4,7 +4,10 @@ precision highp float;
 uniform sampler2D u_image;
 uniform float u_frequency;   // cell size in pixels
 uniform float u_contrast;
-uniform float u_brightness;
+uniform float u_exposure;    // EV stops, –2 to +2
+uniform float u_highlights;  // –1 to +1
+uniform float u_shadows;     // –1 to +1
+uniform float u_blur;        // blur radius in source-image pixels
 uniform float u_invert;     // 0.0 = dark→wide bar, 1.0 = light→wide bar
 uniform vec3 u_foreground;
 uniform vec3 u_background;
@@ -36,11 +39,32 @@ void main() {
 
   imgUV = clamp(imgUV, 0.0, 1.0);
 
-  // Sample luminance once per cell — all pixels in the cell share this value,
-  // which eliminates per-pixel noise from image texture detail
-  vec3 col = texture2D(u_image, imgUV).rgb;
-  float lum = dot(col, vec3(0.299, 0.587, 0.114));
-  lum = clamp((lum + u_brightness - 0.5) * u_contrast + 0.5, 0.0, 1.0);
+  // Box-blur sample — when u_blur == 0 all offsets collapse to same texel
+  vec2 blurStep = vec2(u_blur) / u_imageSize;
+  vec4 blurred = vec4(0.0);
+  blurred += texture2D(u_image, imgUV) * 4.0;
+  blurred += texture2D(u_image, imgUV + vec2( blurStep.x,  0.0)) * 2.0;
+  blurred += texture2D(u_image, imgUV + vec2(-blurStep.x,  0.0)) * 2.0;
+  blurred += texture2D(u_image, imgUV + vec2( 0.0,  blurStep.y)) * 2.0;
+  blurred += texture2D(u_image, imgUV + vec2( 0.0, -blurStep.y)) * 2.0;
+  blurred += texture2D(u_image, imgUV + vec2( blurStep.x,  blurStep.y));
+  blurred += texture2D(u_image, imgUV + vec2(-blurStep.x,  blurStep.y));
+  blurred += texture2D(u_image, imgUV + vec2( blurStep.x, -blurStep.y));
+  blurred += texture2D(u_image, imgUV + vec2(-blurStep.x, -blurStep.y));
+  blurred /= 16.0;
+
+  float lum = dot(blurred.rgb, vec3(0.299, 0.587, 0.114));
+
+  // Exposure (EV multiplicative)
+  lum = clamp(lum * pow(2.0, u_exposure), 0.0, 1.0);
+  // Highlights: affect upper half of tonal range
+  lum -= u_highlights * smoothstep(0.5, 1.0, lum) * (lum - 0.5);
+  lum = clamp(lum, 0.0, 1.0);
+  // Shadows: affect lower half of tonal range
+  lum += u_shadows * smoothstep(0.5, 0.0, lum) * (0.5 - lum);
+  lum = clamp(lum, 0.0, 1.0);
+  // Contrast
+  lum = clamp((lum - 0.5) * u_contrast + 0.5, 0.0, 1.0);
 
   // barWidth: dark→wide (default) or light→wide (inverted)
   float barWidth = mix(1.0 - lum, lum, u_invert);
