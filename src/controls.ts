@@ -18,8 +18,11 @@ export function getParams(): HalftoneParams {
   return {
     frequency:  parseFloat((document.getElementById('frequency')  as HTMLInputElement).value),
     contrast:   parseFloat((document.getElementById('contrast')   as HTMLInputElement).value),
-    brightness: parseFloat((document.getElementById('brightness') as HTMLInputElement).value),
-invert:     (document.getElementById('invert') as HTMLInputElement).checked,
+    exposure:   parseFloat((document.getElementById('exposure')   as HTMLInputElement).value),
+    highlights: parseFloat((document.getElementById('highlights') as HTMLInputElement).value),
+    shadows:    parseFloat((document.getElementById('shadows')    as HTMLInputElement).value),
+    blur:       parseFloat((document.getElementById('blur')       as HTMLInputElement).value),
+    invert:     (document.getElementById('invert') as HTMLInputElement).checked,
     foreground: hexToRgb(fgColor),
     background: hexToRgb(bgColor),
   }
@@ -28,8 +31,11 @@ invert:     (document.getElementById('invert') as HTMLInputElement).checked,
 export function setupControls(onChange: () => void): void {
   const sliders = [
     { id: 'frequency',  valId: 'frequencyVal',  format: (v: number) => String(v) },
-{ id: 'contrast',   valId: 'contrastVal',   format: (v: number) => v.toFixed(2) },
-    { id: 'brightness', valId: 'brightnessVal', format: (v: number) => v.toFixed(2) },
+    { id: 'contrast',   valId: 'contrastVal',   format: (v: number) => v.toFixed(2) },
+    { id: 'exposure',   valId: 'exposureVal',   format: (v: number) => v.toFixed(2) },
+    { id: 'highlights', valId: 'highlightsVal', format: (v: number) => v.toFixed(2) },
+    { id: 'shadows',    valId: 'shadowsVal',    format: (v: number) => v.toFixed(2) },
+    { id: 'blur',       valId: 'blurVal',       format: (v: number) => v.toFixed(1) },
   ]
 
   for (const { id, valId, format } of sliders) {
