@@ -11,6 +11,11 @@ const invertBtn   = document.getElementById('invertBtn')   as HTMLButtonElement
 const resetAllBtn = document.getElementById('resetAllBtn') as HTMLButtonElement
 const peekBtn     = document.getElementById('peekBtn')     as HTMLButtonElement
 
+const landing         = document.getElementById('landing')         as HTMLDivElement
+const landingDropzone = document.getElementById('landingDropzone') as HTMLDivElement
+const landingFileInput = document.getElementById('landingFileInput') as HTMLInputElement
+const landingSelectBtn = document.getElementById('landingSelectBtn') as HTMLButtonElement
+
 let renderer: HalftoneRenderer
 let currentImage: HTMLImageElement | null = null
 let rafId: number | null = null
@@ -71,6 +76,8 @@ function loadFile(file: File): void {
       fitCanvas(img)
       downloadBtn.disabled = false
       scheduleRender()
+      landing.classList.add('hidden')
+      landing.addEventListener('transitionend', () => landing.remove(), { once: true })
     }
     img.src = e.target!.result as string
   }
@@ -106,6 +113,21 @@ function setupDragDrop(el: HTMLElement): void {
 
 setupDragDrop(uploadArea)
 setupDragDrop(placeholder)
+setupDragDrop(landingDropzone)
+
+// ── Landing page ──────────────────────────────────────────────────────────────
+
+landingDropzone.addEventListener('click', () => landingFileInput.click())
+
+landingSelectBtn.addEventListener('click', (e) => {
+  e.stopPropagation()
+  landingFileInput.click()
+})
+
+landingFileInput.addEventListener('change', () => {
+  const file = landingFileInput.files?.[0]
+  if (file) loadFile(file)
+})
 
 // ── Controls ─────────────────────────────────────────────────────────────────
 
@@ -188,6 +210,8 @@ function loadFromUrl(url: string): void {
     fitCanvas(img)
     downloadBtn.disabled = false
     scheduleRender()
+    landing.classList.add('hidden')
+    landing.addEventListener('transitionend', () => landing.remove(), { once: true })
   }
   img.src = url
 }
