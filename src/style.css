@@ -85,11 +85,12 @@ body {
 
 .sidebar-title {
   display: flex;
-  gap: 6px;
-  align-items: baseline;
-  font-size: 28px;
-  letter-spacing: -0.06em;
-  line-height: 0.9;
+}
+
+.sidebar-title img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .title-mono {
