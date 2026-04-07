@@ -508,29 +508,9 @@ input[type="range"]:hover::-moz-range-thumb {
   margin-top: 82px;
 }
 
-.info-modal-title {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.info-title-mono {
-  font-family: 'Geist Mono', monospace;
-  font-weight: 500;
-  font-size: 48px;
-  color: var(--primary);
-  letter-spacing: -0.06em;
-  line-height: 0.9;
-  display: block;
-}
-
-.info-title-brand {
-  font-family: 'Departure Mono', monospace;
-  font-size: 48px;
-  color: var(--accent-yellow);
-  letter-spacing: -0.06em;
-  line-height: 0.9;
-  display: block;
+.info-modal-logo {
+  height: auto;
+  width: 218px;
 }
 
 .info-modal-body {
@@ -576,6 +556,7 @@ input[type="range"]:hover::-moz-range-thumb {
 }
 
 .info-byline-link {
+  color: inherit;
   text-decoration: underline;
 }
 
@@ -612,7 +593,6 @@ input[type="range"]:hover::-moz-range-thumb {
   transition: border-color 0.15s, background 0.15s;
 }
 
-.landing-dropzone:hover,
 .landing-dropzone.drag-over {
   border-color: var(--primary);
   background: var(--neutral-yellow-50);

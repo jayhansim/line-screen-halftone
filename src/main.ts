@@ -120,12 +120,7 @@ setupDragDrop(landingDropzone)
 
 // ── Landing page ──────────────────────────────────────────────────────────────
 
-landingDropzone.addEventListener('click', () => landingFileInput.click())
-
-landingSelectBtn.addEventListener('click', (e) => {
-  e.stopPropagation()
-  landingFileInput.click()
-})
+landingSelectBtn.addEventListener('click', () => landingFileInput.click())
 
 landingFileInput.addEventListener('change', () => {
   const file = landingFileInput.files?.[0]
