@@ -149,16 +149,17 @@ function showPeek(): void {
   if (!currentImage || peekImg) return
   peekImg = document.createElement('img')
   peekImg.src = currentImage.src
-  peekImg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:contain;'
-  canvas.style.visibility = 'hidden'
+  peekImg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 0.15s;'
   canvas.parentElement!.appendChild(peekImg)
+  requestAnimationFrame(() => { if (peekImg) peekImg.style.opacity = '1' })
 }
 
 function hidePeek(): void {
-  if (!peekImg) return
-  peekImg.remove()
+  const img = peekImg
+  if (!img) return
   peekImg = null
-  canvas.style.visibility = ''
+  img.style.opacity = '0'
+  setTimeout(() => img.remove(), 150)
 }
 
 peekBtn.addEventListener('mousedown', showPeek)
