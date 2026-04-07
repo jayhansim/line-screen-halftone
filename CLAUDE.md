@@ -36,6 +36,17 @@ Slider/Color inputs → HalftoneParams ──────→ Fragment shader →
 | `src/controls.ts` | Reads DOM input values into `HalftoneParams`, syncs color picker ↔ hex text inputs |
 | `src/main.ts` | Entry point — wires upload, drag-drop, controls, resize observer, and download together |
 
+### Landing page & info overlay
+
+The app opens on a full-screen landing page (`#landing` in `index.html`) before any image is loaded. Once a file is dropped or selected, the landing fades out and is removed from the DOM.
+
+- **Drop zone** (`#landingDropzone`) — drag-and-drop only; clicking it does nothing
+- **Select file button** (`#landingSelectBtn`) — the sole click-to-upload trigger for the hidden `#landingFileInput`
+- **Info button** (`#landingInfoBtn`) — opens the about modal (`#infoOverlay`)
+- **Info overlay** — closes on close button click, backdrop click, or Escape key
+
+Assets live in `asset/`: `logo-landing.svg` (landing + modal header), `logo-icon.png` (badge), `welcome-background.jpg` (full-screen background).
+
 ### GLSL shader essentials
 
 The fragment shader (`shader.frag.glsl`) requires `#extension GL_OES_standard_derivatives : enable` at the top — this enables `fwidth()` for anti-aliased line edges. The JS side must also call `gl.getExtension('OES_standard_derivatives')` before compiling.
