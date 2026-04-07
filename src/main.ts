@@ -8,7 +8,6 @@ const uploadArea  = document.getElementById('uploadArea')  as HTMLDivElement
 const fileInput   = document.getElementById('fileInput')   as HTMLInputElement
 const downloadBtn = document.getElementById('downloadBtn') as HTMLButtonElement
 const invertBtn   = document.getElementById('invertBtn')   as HTMLButtonElement
-const invertCheck = document.getElementById('invert')      as HTMLInputElement
 const resetAllBtn = document.getElementById('resetAllBtn') as HTMLButtonElement
 const peekBtn     = document.getElementById('peekBtn')     as HTMLButtonElement
 
@@ -130,8 +129,16 @@ downloadBtn.addEventListener('click', () => {
 // ── Invert button ─────────────────────────────────────────────────────────────
 
 invertBtn.addEventListener('click', () => {
-  invertCheck.checked = !invertCheck.checked
-  invertCheck.dispatchEvent(new Event('change'))
+  const fgPicker = document.getElementById('foregroundColor') as HTMLInputElement
+  const fgHex    = document.getElementById('foregroundHex')   as HTMLInputElement
+  const bgPicker = document.getElementById('backgroundColor') as HTMLInputElement
+  const bgHex    = document.getElementById('backgroundHex')   as HTMLInputElement
+  const tmp = fgPicker.value
+  fgPicker.value = bgPicker.value
+  fgHex.value    = bgPicker.value
+  bgPicker.value = tmp
+  bgHex.value    = tmp
+  scheduleRender()
 })
 
 // ── Reset all ─────────────────────────────────────────────────────────────────
