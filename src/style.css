@@ -1,9 +1,45 @@
+/* ── Design tokens (from Figma) ────────────────────────────────────────────── */
+
+:root {
+  /* Neutral Black */
+  --neutral-black-900:    #171728;
+  --neutral-black-900-50: rgba(23, 23, 40, 0.5);
+  --neutral-black-900-10: rgba(23, 23, 40, 0.1);
+  --neutral-black-800:    #313145;
+  --neutral-black-700:    #5e5e6b;
+  --neutral-black-000:    #ffffff;
+
+  /* Neutral Yellow */
+  --neutral-yellow-300:    #c7c5c0;
+  --neutral-yellow-300-50: rgba(199, 197, 192, 0.5);
+  --neutral-yellow-50:     #f4f4f2;
+
+  /* Brand */
+  --brand: #9d8330;
+
+  /* Text */
+  --text-primary:   #171728;
+  --text-secondary: #5e5e6b;
+
+  /* Button Primary */
+  --btn-primary-bg:       #171728;
+  --btn-primary-bg-hover: #313145;
+  --btn-primary-text:     #ffffff;
+
+  /* Button Secondary */
+  --btn-secondary-border:       #c7c5c0;
+  --btn-secondary-border-hover: #f4f4f2;
+  --btn-secondary-text:         #171728;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: system-ui, sans-serif;
-  font-size: 14px;
-  background: #111;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-weight: 450;
+  font-size: 18px;
+  letter-spacing: -0.18px;
+  background: var(--neutral-black-000);
   color: #eee;
   height: 100dvh;
   overflow: hidden;
