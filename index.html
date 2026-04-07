@@ -11,22 +11,53 @@
   </head>
   <body>
     <div id="landing">
-      <div class="landing-dropzone" id="landingDropzone">
-        <input type="file" id="landingFileInput" accept="image/*" hidden />
-        <div class="landing-title-block">
-          <img src="/asset/logo-landing.svg" alt="Line Screen Halftone" class="landing-title-img" />
-          <div class="landing-icon-badge">
-            <img src="/asset/logo-icon.png" alt="" />
+      <div class="landing-container">
+        <div class="landing-dropzone" id="landingDropzone">
+          <input type="file" id="landingFileInput" accept="image/*" hidden />
+          <div class="landing-title-block">
+            <img src="/asset/logo-landing.svg" alt="Line Screen Halftone" class="landing-title-img" />
+            <div class="landing-icon-badge">
+              <img src="/asset/logo-icon.png" alt="" />
+            </div>
+          </div>
+          <div class="landing-divider"></div>
+          <div class="landing-bottom-row">
+            <div class="landing-drop-text">
+              <p class="landing-drop-primary">Drop an image here</p>
+              <p class="landing-drop-secondary">Or click to select</p>
+            </div>
+            <button class="landing-select-btn" id="landingSelectBtn">Select file</button>
           </div>
         </div>
-        <div class="landing-divider"></div>
-        <div class="landing-bottom-row">
-          <div class="landing-drop-text">
-            <p class="landing-drop-primary">Drop an image here</p>
-            <p class="landing-drop-secondary">Or click to select</p>
+        <button class="landing-info-btn" id="landingInfoBtn" aria-label="About this tool">
+          <img src="asset/info.svg" alt="Info" width="24" height="24">
+        </button>
+      </div>
+    </div>
+
+    <!-- About overlay -->
+    <div id="infoOverlay" class="info-overlay hidden" aria-modal="true" role="dialog">
+      <div class="info-modal">
+        <div class="info-modal-header">
+          <div class="info-modal-title">
+            <span class="info-title-mono">line<br>screen</span>
+            <span class="info-title-brand">halftone</span>
           </div>
-          <button class="landing-select-btn" id="landingSelectBtn">Select file</button>
         </div>
+        <div class="info-modal-body">
+          <p>This tool turns images into line screen halftone using WebGL shaders. The creation of this tool was largely inspired by the book cover of "<a href="https://www.amazon.com/Poor-Charlies-Almanack-Essential-Charles/dp/1953953573/" target="_blank" rel="noopener">Poor Charlie's Almanack</a>", and motivation to learn to vibe code with Claude Code.</p>
+          <p>During the creation of this tool, I referenced heavily with the <a href="https://cmyk.danielpetho.com/" target="_blank" rel="noopener">CMYK Halftone Emulator</a> by Daniel Petho and also <a href="https://shaders.paper.design/" target="_blank" rel="noopener">paper shaders</a> by Paper. Thank you so much.</p>
+          <p><strong>Error/Feedback:</strong> Please create an issue on <a href="https://github.com" target="_blank" rel="noopener">Github repo</a>.</p>
+          <p><strong>Landing page images credits:</strong> From <a href="https://unsplash.com/" target="_blank" rel="noopener">Unsplash</a> and processed with this tool.</p>
+          <p><strong>Icons:</strong> From <a href="https://phosphoricons.com/" target="_blank" rel="noopener">Phosphor.</a></p>
+        </div>
+        <div class="info-modal-footer">
+          <div class="info-modal-divider"></div>
+          <p class="info-modal-byline">By <span class="info-byline-link">Junhan</span> with Claude Code</p>
+        </div>
+        <button class="info-close-btn" id="infoCloseBtn" aria-label="Close">
+          <img src="asset/close.svg" alt="Close" width="24" height="24">
+        </button>
       </div>
     </div>
 

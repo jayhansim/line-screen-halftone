@@ -15,6 +15,9 @@ const landing         = document.getElementById('landing')         as HTMLDivEle
 const landingDropzone = document.getElementById('landingDropzone') as HTMLDivElement
 const landingFileInput = document.getElementById('landingFileInput') as HTMLInputElement
 const landingSelectBtn = document.getElementById('landingSelectBtn') as HTMLButtonElement
+const landingInfoBtn  = document.getElementById('landingInfoBtn')  as HTMLButtonElement
+const infoOverlay     = document.getElementById('infoOverlay')     as HTMLDivElement
+const infoCloseBtn    = document.getElementById('infoCloseBtn')    as HTMLButtonElement
 
 let renderer: HalftoneRenderer
 let currentImage: HTMLImageElement | null = null
@@ -127,6 +130,24 @@ landingSelectBtn.addEventListener('click', (e) => {
 landingFileInput.addEventListener('change', () => {
   const file = landingFileInput.files?.[0]
   if (file) loadFile(file)
+})
+
+// ── Info overlay ──────────────────────────────────────────────────────────────
+
+landingInfoBtn.addEventListener('click', () => {
+  infoOverlay.classList.remove('hidden')
+})
+
+infoCloseBtn.addEventListener('click', () => {
+  infoOverlay.classList.add('hidden')
+})
+
+infoOverlay.addEventListener('click', (e) => {
+  if (e.target === infoOverlay) infoOverlay.classList.add('hidden')
+})
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') infoOverlay.classList.add('hidden')
 })
 
 // ── Controls ─────────────────────────────────────────────────────────────────
