@@ -6,73 +6,103 @@
     <title>Line Screen Halftone</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@450;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Departure+Mono&family=Geist+Mono:wght@500&family=Geist:wght@400;450;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
     <div id="app">
       <aside class="controls">
-        <h2>Line Screen Halftone</h2>
 
-        <div class="upload-area" id="uploadArea">
-          <input type="file" id="fileInput" accept="image/*" />
-          <p>Drop image here or <span>click to upload</span></p>
-        </div>
-
-        <div class="control-group">
-          <label>Color Front</label>
-          <div class="color-row">
-            <input type="color" id="foregroundColor" value="#111459" />
-            <input type="text" id="foregroundHex" value="#111459" maxlength="7" />
+        <!-- Section 1: Header -->
+        <div class="sidebar-section sidebar-header">
+          <div class="sidebar-title">
+            <span class="title-mono">line screen</span>
+            <span class="title-brand">halftone</span>
+          </div>
+          <div class="upload-area" id="uploadArea">
+            <input type="file" id="fileInput" accept="image/*" />
+            <p class="upload-primary">Drop new image here</p>
+            <p class="upload-secondary">Or <span>click to select</span></p>
           </div>
         </div>
 
-        <div class="control-group">
-          <label>Color Back</label>
-          <div class="color-row">
-            <input type="color" id="backgroundColor" value="#C3B467" />
-            <input type="text" id="backgroundHex" value="#C3B467" maxlength="7" />
+        <!-- Section 2: Colors -->
+        <div class="sidebar-section gap-12">
+          <div class="control-group color-control">
+            <label>Color front</label>
+            <div class="color-row">
+              <input type="color" id="foregroundColor" value="#111459" />
+              <input type="text" id="foregroundHex" value="#111459" maxlength="7" />
+            </div>
+          </div>
+          <div class="control-group color-control">
+            <label>Color back</label>
+            <div class="color-row">
+              <input type="color" id="backgroundColor" value="#C3B467" />
+              <input type="text" id="backgroundHex" value="#C3B467" maxlength="7" />
+            </div>
+          </div>
+          <div class="action-row">
+            <input type="checkbox" id="invert" hidden />
+            <button class="text-btn" id="invertBtn">&#8693; Invert color</button>
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="toggle-label">
-            <input type="checkbox" id="invert" />
-            Invert Color
-          </label>
+        <!-- Section 3: Sliders -->
+        <div class="sidebar-section">
+          <div class="control-group">
+            <div class="slider-label">
+              <span>Cell size</span>
+              <span class="value" id="frequencyVal">16</span>
+            </div>
+            <input type="range" id="frequency" min="8" max="40" value="16" step="2" />
+          </div>
+          <div class="control-group">
+            <div class="slider-label">
+              <span>Exposure</span>
+              <span class="value" id="exposureVal">0.00</span>
+            </div>
+            <input type="range" id="exposure" min="-2" max="2" value="0" step="0.05" />
+          </div>
+          <div class="control-group">
+            <div class="slider-label">
+              <span>Contrast</span>
+              <span class="value" id="contrastVal">1.50</span>
+            </div>
+            <input type="range" id="contrast" min="0.1" max="4.0" value="1.5" step="0.05" />
+          </div>
+          <div class="control-group">
+            <div class="slider-label">
+              <span>Highlights</span>
+              <span class="value" id="highlightsVal">0.00</span>
+            </div>
+            <input type="range" id="highlights" min="-1" max="1" value="0" step="0.05" />
+          </div>
+          <div class="control-group">
+            <div class="slider-label">
+              <span>Shadows</span>
+              <span class="value" id="shadowsVal">0.00</span>
+            </div>
+            <input type="range" id="shadows" min="-1" max="1" value="0" step="0.05" />
+          </div>
+          <div class="control-group">
+            <div class="slider-label">
+              <span>Blur</span>
+              <span class="value" id="blurVal">2.0</span>
+            </div>
+            <input type="range" id="blur" min="0" max="10" value="2" step="0.1" />
+          </div>
+          <div class="action-row">
+            <button class="text-btn" id="resetAllBtn">&#8634; Reset all</button>
+          </div>
         </div>
 
-        <div class="control-group">
-          <label>Cell Size <span class="value" id="frequencyVal">16</span></label>
-          <input type="range" id="frequency" min="8" max="40" value="16" step="2" />
+        <!-- Bottom bar -->
+        <div class="sidebar-bottom">
+          <button class="btn-secondary" id="peekBtn">Hold to view original</button>
+          <button class="btn-primary" id="downloadBtn" disabled>Download image</button>
         </div>
 
-        <div class="control-group">
-          <label>Exposure <span class="value" id="exposureVal">0.00</span></label>
-          <input type="range" id="exposure" min="-2" max="2" value="0" step="0.05" />
-        </div>
-
-        <div class="control-group">
-          <label>Contrast <span class="value" id="contrastVal">1.5</span></label>
-          <input type="range" id="contrast" min="0.1" max="4.0" value="1.5" step="0.05" />
-        </div>
-
-        <div class="control-group">
-          <label>Highlights <span class="value" id="highlightsVal">0.00</span></label>
-          <input type="range" id="highlights" min="-1" max="1" value="0" step="0.05" />
-        </div>
-
-        <div class="control-group">
-          <label>Shadows <span class="value" id="shadowsVal">0.00</span></label>
-          <input type="range" id="shadows" min="-1" max="1" value="0" step="0.05" />
-        </div>
-
-        <div class="control-group">
-          <label>Blur <span class="value" id="blurVal">2.0</span></label>
-          <input type="range" id="blur" min="0" max="10" value="2" step="0.1" />
-        </div>
-
-<button id="downloadBtn" disabled>Download PNG</button>
       </aside>
 
       <main class="preview">

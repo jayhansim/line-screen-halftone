@@ -28,7 +28,19 @@ export function getParams(): HalftoneParams {
   }
 }
 
+export function updateSliderFill(input: HTMLInputElement): void {
+  const min = parseFloat(input.min)
+  const max = parseFloat(input.max)
+  const val = parseFloat(input.value)
+  const pct = ((val - min) / (max - min)) * 100
+  input.style.background = `linear-gradient(to right, var(--neutral-black-900) ${pct}%, var(--neutral-yellow-300-50) ${pct}%)`
+}
+
+let _onChange: () => void
+
 export function setupControls(onChange: () => void): void {
+  _onChange = onChange
+
   const sliders = [
     { id: 'frequency',  valId: 'frequencyVal',  format: (v: number) => String(v) },
     { id: 'contrast',   valId: 'contrastVal',   format: (v: number) => v.toFixed(2) },
@@ -41,8 +53,13 @@ export function setupControls(onChange: () => void): void {
   for (const { id, valId, format } of sliders) {
     const slider = document.getElementById(id) as HTMLInputElement
     const display = document.getElementById(valId) as HTMLSpanElement
+
+    // Set initial fill
+    updateSliderFill(slider)
+
     slider.addEventListener('input', () => {
       display.textContent = format(parseFloat(slider.value))
+      updateSliderFill(slider)
       onChange()
     })
   }
@@ -70,4 +87,25 @@ export function setupControls(onChange: () => void): void {
       }
     })
   }
+}
+
+export function resetAll(): void {
+  const sliderDefs = [
+    { id: 'frequency',  valId: 'frequencyVal',  format: (v: number) => String(v) },
+    { id: 'contrast',   valId: 'contrastVal',   format: (v: number) => v.toFixed(2) },
+    { id: 'exposure',   valId: 'exposureVal',   format: (v: number) => v.toFixed(2) },
+    { id: 'highlights', valId: 'highlightsVal', format: (v: number) => v.toFixed(2) },
+    { id: 'shadows',    valId: 'shadowsVal',    format: (v: number) => v.toFixed(2) },
+    { id: 'blur',       valId: 'blurVal',       format: (v: number) => v.toFixed(1) },
+  ]
+
+  for (const { id, valId, format } of sliderDefs) {
+    const slider = document.getElementById(id) as HTMLInputElement
+    const display = document.getElementById(valId) as HTMLSpanElement
+    slider.value = slider.defaultValue
+    display.textContent = format(parseFloat(slider.defaultValue))
+    updateSliderFill(slider)
+  }
+
+  _onChange()
 }
